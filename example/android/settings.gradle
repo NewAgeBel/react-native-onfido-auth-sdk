@@ -1,0 +1,6 @@
+rootProject.name = 'OnfidoAuthSdkExample'
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+include ':app'
+
+include ':reactnativeonfidoauthsdk'
+project(':reactnativeonfidoauthsdk').projectDir = new File(rootProject.projectDir, '../../android')
