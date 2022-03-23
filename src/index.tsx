@@ -1,22 +1,2 @@
-import { NativeModules, Platform } from 'react-native';
-
-const LINKING_ERROR =
-  `The package 'react-native-onfido-auth-sdk' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
-
-const OnfidoAuthSdk = NativeModules.OnfidoAuthSdk
-  ? NativeModules.OnfidoAuthSdk
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
-
-export function multiply(a: number, b: number): Promise<number> {
-  return OnfidoAuthSdk.multiply(a, b);
-}
+export { default, default as OnfidoAuth } from './OnfidoAuth';
+export * from './types';
