@@ -5,17 +5,17 @@ The Onfido Authentication SDK provides a set of screens for React Native applica
 ## Installation
 
 ```sh
-npm install react-native-onfido-auth-sdk
+yarn add react-native-onfido-auth-sdk
 ```
 
 ## Usage
 
 ```js
-import { multiply } from "react-native-onfido-auth-sdk";
-
+import { OnfidoAuth } from 'react-native-onfido-auth-sdk';
 // ...
-
-const result = await multiply(3, 7);
+OnfidoAuth.start({ sdkToken: 'sdkToken' })
+  .then(/* ... */)
+  .catch(/* ... */);
 ```
 
 ## Contributing
