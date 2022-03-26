@@ -1,5 +1,7 @@
 import Foundation
+#if !targetEnvironment(simulator)
 import OnfidoAuth
+
 
 public func buildOnfidoAuthConfig(config:NSDictionary) throws -> OnfidoAuth.OnfidoAuthConfigBuilder {
   let sdkToken:String = config["sdkToken"] as! String
@@ -18,11 +20,11 @@ public func buildOnfidoAuthConfig(config:NSDictionary) throws -> OnfidoAuth.Onfi
 class OnfidoAuthSdk: NSObject {
 
   private lazy var rootViewController = UIApplication.shared.windows.first?.rootViewController?.findTopMostController()
-  
+
   @objc static func requiresMainQueueSetup() -> Bool {
     return false
   }
-  
+
   @objc func start(_ config: NSDictionary,
                     resolver resolve: @escaping RCTPromiseResolveBlock,
                     rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
@@ -30,11 +32,11 @@ class OnfidoAuthSdk: NSObject {
       self.run(withConfig: config, resolver: resolve, rejecter: reject)
     }
   }
-  
+
   private func run(withConfig config: NSDictionary,
                   resolver resolve: @escaping RCTPromiseResolveBlock,
                   rejecter reject: @escaping RCTPromiseRejectBlock) {
-    
+
     do {
       let responseHandler: (OnfidoAuthResponse) -> Void = { response in
         switch response {
@@ -74,13 +76,13 @@ class OnfidoAuthSdk: NSObject {
             return;
         }
       }
-      
+
       let onfidoAuthConfig =  try buildOnfidoAuthConfig(config: config)
       let builtOnfidoAuthConfig = try onfidoAuthConfig.build()
 
       let onfidoAuthFlow = OnfidoAuthFlow(withConfiguration: builtOnfidoAuthConfig)
         .with(responseHandler: responseHandler)
-      
+
       if let rootViewController = self.rootViewController {
         onfidoAuthFlow.run(from: rootViewController)
       } else {
@@ -96,8 +98,35 @@ class OnfidoAuthSdk: NSObject {
       return;
     }
   }
-  
+
 }
+#else
+@objc(OnfidoAuthSdk)
+class OnfidoAuthSdk: NSObject {
+
+  private lazy var rootViewController = UIApplication.shared.windows.first?.rootViewController?.findTopMostController()
+
+  @objc static func requiresMainQueueSetup() -> Bool {
+    return false
+  }
+
+  @objc func start(_ config: NSDictionary,
+                    resolver resolve: @escaping RCTPromiseResolveBlock,
+                    rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+    DispatchQueue.main.async {
+      self.run(withConfig: config, resolver: resolve, rejecter: reject)
+    }
+  }
+
+  private func run(withConfig config: NSDictionary,
+                  resolver resolve: @escaping RCTPromiseResolveBlock,
+                  rejecter reject: @escaping RCTPromiseRejectBlock) {
+      resolve("Simulator");
+      return;
+  }
+
+}
+#endif
 
 extension UIViewController {
   public func findTopMostController() -> UIViewController {
