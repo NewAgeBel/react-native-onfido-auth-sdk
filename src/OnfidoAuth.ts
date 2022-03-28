@@ -37,6 +37,10 @@ const OnfidoAuth = {
       return configError('sdkToken is not a valid jwt');
     }
 
+    if (config.retryCount != null && !Number.isInteger(config.retryCount)) {
+      return configError('retryCount is not a integer');
+    }
+
     return OnfidoAuthSdk.start(config);
   },
 };

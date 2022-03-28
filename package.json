@@ -1,6 +1,6 @@
 {
   "name": "react-native-onfido-auth-sdk",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "The Onfido Authentication SDK provides a set of screens for React Native applications to capture 3D face scans for the purpose of identity authentication.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
