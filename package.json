@@ -13,6 +13,7 @@
     "android",
     "ios",
     "cpp",
+    "scripts",
     "react-native-onfido-auth-sdk.podspec",
     "!lib/typescript/example",
     "!android/build",
@@ -29,7 +30,7 @@
     "release": "release-it",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "updateColors": "node scripts/customize_android.js"
   },
   "keywords": [
     "react-native",
