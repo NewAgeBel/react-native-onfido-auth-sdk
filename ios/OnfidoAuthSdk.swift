@@ -3,12 +3,13 @@ import Foundation
 import OnfidoAuth
 
 
-public func buildOnfidoAuthConfig(config:NSDictionary) throws -> OnfidoAuth.OnfidoAuthConfigBuilder {
+public func buildOnfidoAuthConfig(config:NSDictionary, appearance: OnfidoAuthAppearance) throws -> OnfidoAuth.OnfidoAuthConfigBuilder {
   let sdkToken:String = config["sdkToken"] as! String
 
   var onfidoAuthConfig = OnfidoAuthConfig.builder()
     .withSDKToken(sdkToken)
-
+    .withAppearance(appearance)
+  
   if let retryCount = (config["retryCount"] as? Int) {
     onfidoAuthConfig = onfidoAuthConfig.withRetryCount(retryCount)
   }
@@ -76,8 +77,11 @@ class OnfidoAuthSdk: NSObject {
             return;
         }
       }
+        
+      let appearanceFilePath = Bundle.main.path(forResource: "customization.ios", ofType: "json")
+      let appearance = try loadAppearanceFromFile(filePath: appearanceFilePath)
 
-      let onfidoAuthConfig =  try buildOnfidoAuthConfig(config: config)
+      let onfidoAuthConfig =  try buildOnfidoAuthConfig(config: config, appearance: appearance)
       let builtOnfidoAuthConfig = try onfidoAuthConfig.build()
 
       let onfidoAuthFlow = OnfidoAuthFlow(withConfiguration: builtOnfidoAuthConfig)
@@ -121,8 +125,8 @@ class OnfidoAuthSdk: NSObject {
   private func run(withConfig config: NSDictionary,
                   resolver resolve: @escaping RCTPromiseResolveBlock,
                   rejecter reject: @escaping RCTPromiseRejectBlock) {
-      resolve("Simulator");
-      return;
+    resolve("Simulator");
+    return;
   }
 
 }
