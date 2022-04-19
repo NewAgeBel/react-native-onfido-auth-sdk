@@ -2,6 +2,16 @@ import Foundation
 #if !targetEnvironment(simulator)
 import OnfidoAuth
 
+extension AuthenticationResult {
+    var dictionary: [String: Any] {
+            return ["verified": verified,
+                    "uuid": uuid ?? "",
+                    "token": token ?? ""];
+        }
+    var nsDictionary: NSDictionary {
+        return dictionary as NSDictionary
+    }
+}
 
 public func buildOnfidoAuthConfig(config:NSDictionary, appearance: OnfidoAuthAppearance) throws -> OnfidoAuth.OnfidoAuthConfigBuilder {
   let sdkToken:String = config["sdkToken"] as! String
@@ -9,7 +19,7 @@ public func buildOnfidoAuthConfig(config:NSDictionary, appearance: OnfidoAuthApp
   var onfidoAuthConfig = OnfidoAuthConfig.builder()
     .withSDKToken(sdkToken)
     .withAppearance(appearance)
-  
+
   if let retryCount = (config["retryCount"] as? Int) {
     onfidoAuthConfig = onfidoAuthConfig.withRetryCount(retryCount)
   }
@@ -42,7 +52,7 @@ class OnfidoAuthSdk: NSObject {
       let responseHandler: (OnfidoAuthResponse) -> Void = { response in
         switch response {
           case let .success(results):
-            resolve(results)
+            resolve(results.nsDictionary)
             return;
           case let .cancel(reason):
             switch (reason) {
@@ -77,7 +87,7 @@ class OnfidoAuthSdk: NSObject {
             return;
         }
       }
-        
+
       let appearanceFilePath = Bundle.main.path(forResource: "customization.ios", ofType: "json")
       let appearance = try loadAppearanceFromFile(filePath: appearanceFilePath)
 
