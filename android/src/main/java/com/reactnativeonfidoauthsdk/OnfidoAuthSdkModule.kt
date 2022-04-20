@@ -59,8 +59,14 @@ class OnfidoAuthSdkModule: ReactContextBaseJavaModule {
           data,
           object : OnfidoAuthentication.ResultListener {
             override fun onUserCompleted(authResult: OnfidoAuthentication.AuthenticationResult) {
-              currentPromise?.resolve(authResult)
-              currentPromise = null
+              currentPromise = try {
+                val responseMap = Response(authResult).convertToWritableMap()
+                currentPromise?.resolve(responseMap)
+                null
+              } catch (e: Exception) {
+                currentPromise?.reject("error", "Error serializing response", e)
+                null
+              }
             }
 
             override fun onUserExited(exitCode: OnfidoAuthentication.ExitCode) {
