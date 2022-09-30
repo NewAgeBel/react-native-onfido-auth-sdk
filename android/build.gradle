@@ -128,5 +128,5 @@ dependencies {
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-  implementation 'com.onfido.sdk:authentication:0.0.6'
+  implementation 'com.onfido.sdk:authentication:0.0.8'
 }
