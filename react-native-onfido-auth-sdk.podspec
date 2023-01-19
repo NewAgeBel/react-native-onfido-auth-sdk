@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React-Core"
-  s.dependency "OnfidoAuth", "~> 0.2.5"
+  s.dependency "OnfidoAuth", "~> 0.2.6"
 end
